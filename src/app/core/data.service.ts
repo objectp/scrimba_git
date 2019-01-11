@@ -1,4 +1,4 @@
-// core folder is recomended for your singleton object and it going to have two services one is going to be called data service, it is going to be responsible for http call or ajax call you maight say to the server and the other is going to be called sorter service, it is going to sort our data 
+// co:re folder is recomended for your singleton object and it going to have two services one is going to be called data service, it is going to be responsible for http call or ajax call you maight say to the server and the other is going to be called sorter service, it is going to sort our data 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
@@ -18,10 +18,30 @@ export class DataService {
    catchError(this.handleError)
   );
  }
+
+ getCustomer(id: number) : Observable<ICustomer> {
+  return this.http.get<ICustomer[]>(this.baseUrl + 'customers.json')
+  .pipe(
+   map(customers => {
+    let customer = customers.filter((cust: ICustomer) => cust.id === id);
+    return (customer && customer.length) ? customer[0] : null;
+   }),
+   catchError(this.handleError)
+  )
+ }
+
+ getOrders(id: number) : Observable<IOrder[]> {
+  return this.http.get<IOrder[]>(this.baseUrl + 'orders.json')
+  .pipe(
+   map(orders => {
+    let custOrders = orders.filter((order: IOrder) => order.customerId === id);
+    return custOrders;
+   }),
+   catchError(this.handleError)
+  );
+ }
+
  constructor() { }
-
-
-
 
  private handleError(error: any) {
   console.error('server error:', error);
