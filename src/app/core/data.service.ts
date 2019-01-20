@@ -12,6 +12,8 @@ export class DataService {
 
  baseUrl: string = 'assets/';
 
+ constructor(private http: HttpClient) {}
+
  getCustomers(): Observable<ICustomer[]> {
   return this.http.get<ICustomer[]>(this.baseUrl + 'customers.json')
   .pipe(
@@ -34,14 +36,13 @@ export class DataService {
   return this.http.get<IOrder[]>(this.baseUrl + 'orders.json')
   .pipe(
    map(orders => {
-    let custOrders = orders.filter((order: IOrder) => order.customerId === id);
+    let custOrders = orders.filter((order: IOrder) => order.customerID === id);
     return custOrders;
    }),
    catchError(this.handleError)
   );
  }
 
- constructor() { }
 
  private handleError(error: any) {
   console.error('server error:', error);
